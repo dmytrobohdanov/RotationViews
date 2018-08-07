@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import com.dbohdanov.viewswipe.rotation.RotationListener;
+
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "taag";
 

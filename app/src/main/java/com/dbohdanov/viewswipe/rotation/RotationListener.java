@@ -1,12 +1,7 @@
-package com.dbohdanov.viewswipe;
+package com.dbohdanov.viewswipe.rotation;
 
-import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-
-import com.dbohdanov.viewswipe.rotation.OnMaxAngleReachedListener;
-import com.dbohdanov.viewswipe.rotation.Settings;
 
 import static com.dbohdanov.viewswipe.rotation.Settings.ANGLE_MAX;
 import static com.dbohdanov.viewswipe.rotation.Settings.ANGLE_TO_DELETE;
