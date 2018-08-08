@@ -44,7 +44,7 @@ public class RotationListener implements View.OnTouchListener {
         double ab = Math.sqrt(sqr(ax - bx) + sqr(ay - by));
         double bc = Math.sqrt(sqr(bx - cx) + sqr(by - cy));
 
-        float angle = (-1) * (float) (Math.acos(ab / bc) * 180 / Math.PI);
+        float angle = (position == POSITION_LEFT ? (-1) : 1) * (float) (Math.acos(ab / bc) * 180 / Math.PI);
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
