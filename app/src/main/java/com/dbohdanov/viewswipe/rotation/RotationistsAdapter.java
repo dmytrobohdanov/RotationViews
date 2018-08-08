@@ -78,20 +78,14 @@ public abstract class RotationistsAdapter<VHR extends RotationistsAdapter.ViewHo
     }
 
     private void setRightAccordingToCurrentPosition() {
-        if (currentRightPosition == (rightItemsCount - 1)) {
-//            rightViewFront.setVisibility(View.INVISIBLE);
-//            rightViewBack.setVisibility(View.INVISIBLE);
+        if (currentRightPosition == rightItemsCount) {
             rightViewFront.hideView();
             rightViewBack.hideView();
-        } else if (currentRightPosition == (rightItemsCount - 2)) {
-//            rightViewFront.setVisibility(View.VISIBLE);
-//            rightViewBack.setVisibility(View.INVISIBLE);
+        } else if (currentRightPosition == (rightItemsCount - 1)) {
             rightViewFront.showView();
             rightViewBack.hideView();
             onBindRightViewHolder(rightViewFront, currentLeftPosition);
         } else {
-//            rightViewFront.setVisibility(View.VISIBLE);
-//            rightViewBack.setVisibility(View.VISIBLE);
             rightViewFront.showView();
             rightViewBack.showView();
             onBindRightViewHolder(rightViewFront, currentLeftPosition);
@@ -100,26 +94,16 @@ public abstract class RotationistsAdapter<VHR extends RotationistsAdapter.ViewHo
     }
 
     private void setLeftAccordingToCurrentPosition() {
-        if (currentLeftPosition == (leftItemsCount - 1)) {
-            Log.d(TAG, "setLeftAccordingToCurrentPosition: 1");
-//            leftViewFront.setVisibility(View.INVISIBLE);
-//            leftViewBack.setVisibility(View.INVISIBLE);
+        if (currentLeftPosition == (leftItemsCount)) {
             leftViewFront.hideView();
             leftViewBack.hideView();
-        } else if (currentLeftPosition == (leftItemsCount - 2)) {
-            Log.d(TAG, "setLeftAccordingToCurrentPosition: 2");
+        } else if (currentLeftPosition == (leftItemsCount - 1)) {
             leftViewBack.hideView();
             leftViewFront.showView();
-//            leftViewFront.setVisibility(View.VISIBLE);
-//            leftViewBack.setVisibility(View.INVISIBLE);
             onBindLeftViewHolder(leftViewFront, currentLeftPosition);
         } else {
-            Log.d(TAG, "setLeftAccordingToCurrentPosition: 3");
-
             leftViewFront.showView();
             leftViewBack.showView();
-//            leftViewFront.setVisibility(View.VISIBLE);
-//            leftViewBack.setVisibility(View.VISIBLE);
             onBindLeftViewHolder(leftViewFront, currentLeftPosition);
             onBindLeftViewHolder(leftViewBack, currentLeftPosition + 1);
         }
@@ -140,7 +124,6 @@ public abstract class RotationistsAdapter<VHR extends RotationistsAdapter.ViewHo
      * removes left item
      */
     private void popLeft() {
-        leftItemsCount--;
         currentLeftPosition++;
         setLeftAccordingToCurrentPosition();
     }
@@ -149,7 +132,6 @@ public abstract class RotationistsAdapter<VHR extends RotationistsAdapter.ViewHo
      * removes right item
      */
     private void popRight() {
-        rightItemsCount--;
         currentRightPosition++;
         setRightAccordingToCurrentPosition();
     }
