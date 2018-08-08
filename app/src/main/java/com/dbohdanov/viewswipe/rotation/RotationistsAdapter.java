@@ -84,12 +84,12 @@ public abstract class RotationistsAdapter<VHR extends RotationistsAdapter.ViewHo
         } else if (currentRightPosition == (rightItemsCount - 1)) {
             rightViewFront.showView();
             rightViewBack.hideView();
-            onBindRightViewHolder(rightViewFront, currentLeftPosition);
+            onBindRightViewHolder(rightViewFront, currentRightPosition);
         } else {
             rightViewFront.showView();
             rightViewBack.showView();
-            onBindRightViewHolder(rightViewFront, currentLeftPosition);
-            onBindRightViewHolder(rightViewBack, currentLeftPosition + 1);
+            onBindRightViewHolder(rightViewFront, currentRightPosition);
+            onBindRightViewHolder(rightViewBack, currentRightPosition + 1);
         }
     }
 
@@ -98,8 +98,8 @@ public abstract class RotationistsAdapter<VHR extends RotationistsAdapter.ViewHo
             leftViewFront.hideView();
             leftViewBack.hideView();
         } else if (currentLeftPosition == (leftItemsCount - 1)) {
-            leftViewBack.hideView();
             leftViewFront.showView();
+            leftViewBack.hideView();
             onBindLeftViewHolder(leftViewFront, currentLeftPosition);
         } else {
             leftViewFront.showView();
@@ -125,6 +125,8 @@ public abstract class RotationistsAdapter<VHR extends RotationistsAdapter.ViewHo
      */
     private void popLeft() {
         currentLeftPosition++;
+        leftViewFront.hideView();
+        setDefaultPosition(leftViewFront.getRootView());
         setLeftAccordingToCurrentPosition();
     }
 
@@ -133,7 +135,13 @@ public abstract class RotationistsAdapter<VHR extends RotationistsAdapter.ViewHo
      */
     private void popRight() {
         currentRightPosition++;
+        rightViewFront.hideView();
+        setDefaultPosition(rightViewFront.getRootView());
         setRightAccordingToCurrentPosition();
+    }
+
+    private void setDefaultPosition(View view) {
+        view.setRotation(0);
     }
 
     private void setPivotToView(View view) {
