@@ -1,7 +1,7 @@
 package com.dbohdanov.viewswipe;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +16,8 @@ import java.util.ArrayList;
  *
  */
 public class CustomAdapter extends RotationistsAdapter<CustomAdapter.RightViewHolder, CustomAdapter.LeftViewHolder> {
+    private final String TAG = getClass().getSimpleName() + "taag";
+
     private final ArrayList<DataModel> leftDataArray;
     private final ArrayList<DataModel> rigthDataArray;
 
@@ -30,14 +32,14 @@ public class CustomAdapter extends RotationistsAdapter<CustomAdapter.RightViewHo
 
     @Override
     public LeftViewHolder onCreateLeftViewHolder(@NonNull ViewGroup parent) {
-        View itemView = LayoutInflater.from(parent.getContext())
+        View itemView = LayoutInflater.from(parent.getContext().getApplicationContext())
                 .inflate(R.layout.left_holder, parent, false);
         return new LeftViewHolder(itemView);
     }
 
     @Override
     public RightViewHolder onCreateRightViewHolder(@NonNull ViewGroup parent) {
-        View itemView = LayoutInflater.from(parent.getContext())
+        View itemView = LayoutInflater.from(parent.getContext().getApplicationContext())
                 .inflate(R.layout.right_holder, parent, false);
         return new RightViewHolder(itemView);
     }
@@ -66,20 +68,52 @@ public class CustomAdapter extends RotationistsAdapter<CustomAdapter.RightViewHo
 
 
     static class RightViewHolder extends RotationistsAdapter.ViewHolder {
+        View rootView;
         TextView textView;
 
         public RightViewHolder(View rootView) {
-            super(rootView, rootView.getContext());
+            this.rootView = rootView;
             textView = rootView.findViewById(R.id.right_tv);
+        }
+
+        @Override
+        public void showView() {
+            rootView.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void hideView() {
+            rootView.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public View getRootView() {
+            return rootView;
         }
     }
 
     static class LeftViewHolder extends RotationistsAdapter.ViewHolder {
+        View rootView;
         TextView textView;
 
         public LeftViewHolder(View rootView) {
-            super(rootView, rootView.getContext());
+            this.rootView = rootView;
             textView = rootView.findViewById(R.id.left_tv);
+        }
+
+        @Override
+        public void showView() {
+            rootView.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void hideView() {
+            rootView.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public View getRootView() {
+            return rootView;
         }
     }
 }

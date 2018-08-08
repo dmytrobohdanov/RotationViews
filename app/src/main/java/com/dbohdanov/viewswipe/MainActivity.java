@@ -22,7 +22,9 @@ public class MainActivity extends AppCompatActivity {
 
         RelativeLayout rlLeft = findViewById(R.id.main_left);
         RelativeLayout rlRight = findViewById(R.id.main_right);
+
         customAdapter = new CustomAdapter(leftData, rightData, rlLeft, rlRight);
+        customAdapter.initAdapter();
     }
 
     private ArrayList<DataModel> getLeftData() {

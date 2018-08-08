@@ -3,21 +3,21 @@ package com.dbohdanov.viewswipe.rotation;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
-import java.util.ArrayList;
-
 /**
  * adapter for creating 2-blocks view set with ability to delete items
  */
 public abstract class RotationistsAdapter<VHR extends RotationistsAdapter.ViewHolder, VHL extends RotationistsAdapter.ViewHolder> {
+    private final String TAG = getClass().getSimpleName() + "taag";
+
     //left and right layouts
     private RelativeLayout layoutLeft;
-    private RelativeLayout rightLayout;
+    private RelativeLayout layoutRight;
 
     //views: 2 for each block
     //one is front (see always)
@@ -34,11 +34,16 @@ public abstract class RotationistsAdapter<VHR extends RotationistsAdapter.ViewHo
     private int currentRightPosition;
 
 
-    @SuppressLint("ClickableViewAccessibility")
     public RotationistsAdapter(RelativeLayout layoutLeft, RelativeLayout layoutRight) {
         this.layoutLeft = layoutLeft;
-        this.rightLayout = layoutRight;
+        this.layoutRight = layoutRight;
+    }
 
+    /**
+     * must be called after constructor
+     */
+    @SuppressLint("ClickableViewAccessibility")
+    public void initAdapter() {
         //getting size of data arrays
         leftItemsCount = getLeftItemsCount();
         rightItemsCount = getRightItemsCount();
@@ -51,40 +56,18 @@ public abstract class RotationistsAdapter<VHR extends RotationistsAdapter.ViewHo
         rightViewFront = onCreateRightViewHolder(layoutRight);
 
         //adding views to layouts
-        layoutLeft.addView(leftViewBack);
-        layoutLeft.addView(leftViewFront);
+        layoutLeft.addView(leftViewBack.getRootView());
+        layoutLeft.addView(leftViewFront.getRootView());
 
-        layoutRight.addView(rightViewBack);
-        layoutRight.addView(rightViewFront);
+        layoutRight.addView(rightViewBack.getRootView());
+        layoutRight.addView(rightViewFront.getRootView());
 
         //setting rotate listeners
-        leftViewFront.setOnTouchListener(new RotationListener(RotationListener.POSITION_LEFT, this::popLeft));
-        leftViewFront.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                leftViewFront.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        leftViewFront.getRootView().setOnTouchListener(new RotationListener(RotationListener.POSITION_LEFT, this::popLeft));
+        rightViewFront.getRootView().setOnTouchListener(new RotationListener(RotationListener.POSITION_RIGHT, this::popRight));
 
-                float pivot_x = leftViewFront.getWidth() / 2 + leftViewFront.getX();
-                float pivot_y = (5f / 6) * leftViewFront.getHeight() + leftViewFront.getY();
-
-                leftViewFront.setPivotX(pivot_x);
-                leftViewFront.setPivotY(pivot_y);
-            }
-        });
-
-        rightViewFront.setOnTouchListener(new RotationListener(RotationListener.POSITION_RIGHT, this::popRight));
-        rightViewFront.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                rightViewFront.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                float pivot_x = rightViewFront.getWidth() / 2 + rightViewFront.getX();
-                float pivot_y = (5f / 6) * rightViewFront.getHeight() + rightViewFront.getY();
-
-                rightViewFront.setPivotX(pivot_x);
-                rightViewFront.setPivotY(pivot_y);
-            }
-        });
+        setPivotToView(rightViewFront.getRootView());
+        setPivotToView(leftViewFront.getRootView());
 
         currentLeftPosition = 0;
         currentRightPosition = 0;
@@ -92,20 +75,25 @@ public abstract class RotationistsAdapter<VHR extends RotationistsAdapter.ViewHo
         setLeftAccordingToCurrentPosition();
         setRightAccordingToCurrentPosition();
 
-
     }
 
     private void setRightAccordingToCurrentPosition() {
         if (currentRightPosition == (rightItemsCount - 1)) {
-            rightViewFront.setVisibility(View.INVISIBLE);
-            rightViewBack.setVisibility(View.INVISIBLE);
+//            rightViewFront.setVisibility(View.INVISIBLE);
+//            rightViewBack.setVisibility(View.INVISIBLE);
+            rightViewFront.hideView();
+            rightViewBack.hideView();
         } else if (currentRightPosition == (rightItemsCount - 2)) {
-            rightViewFront.setVisibility(View.VISIBLE);
-            rightViewBack.setVisibility(View.INVISIBLE);
+//            rightViewFront.setVisibility(View.VISIBLE);
+//            rightViewBack.setVisibility(View.INVISIBLE);
+            rightViewFront.showView();
+            rightViewBack.hideView();
             onBindRightViewHolder(rightViewFront, currentLeftPosition);
         } else {
-            rightViewFront.setVisibility(View.VISIBLE);
-            rightViewBack.setVisibility(View.VISIBLE);
+//            rightViewFront.setVisibility(View.VISIBLE);
+//            rightViewBack.setVisibility(View.VISIBLE);
+            rightViewFront.showView();
+            rightViewBack.showView();
             onBindRightViewHolder(rightViewFront, currentLeftPosition);
             onBindRightViewHolder(rightViewBack, currentLeftPosition + 1);
         }
@@ -113,15 +101,25 @@ public abstract class RotationistsAdapter<VHR extends RotationistsAdapter.ViewHo
 
     private void setLeftAccordingToCurrentPosition() {
         if (currentLeftPosition == (leftItemsCount - 1)) {
-            leftViewFront.setVisibility(View.INVISIBLE);
-            leftViewBack.setVisibility(View.INVISIBLE);
+            Log.d(TAG, "setLeftAccordingToCurrentPosition: 1");
+//            leftViewFront.setVisibility(View.INVISIBLE);
+//            leftViewBack.setVisibility(View.INVISIBLE);
+            leftViewFront.hideView();
+            leftViewBack.hideView();
         } else if (currentLeftPosition == (leftItemsCount - 2)) {
-            leftViewFront.setVisibility(View.VISIBLE);
-            leftViewBack.setVisibility(View.INVISIBLE);
+            Log.d(TAG, "setLeftAccordingToCurrentPosition: 2");
+            leftViewBack.hideView();
+            leftViewFront.showView();
+//            leftViewFront.setVisibility(View.VISIBLE);
+//            leftViewBack.setVisibility(View.INVISIBLE);
             onBindLeftViewHolder(leftViewFront, currentLeftPosition);
         } else {
-            leftViewFront.setVisibility(View.VISIBLE);
-            leftViewBack.setVisibility(View.VISIBLE);
+            Log.d(TAG, "setLeftAccordingToCurrentPosition: 3");
+
+            leftViewFront.showView();
+            leftViewBack.showView();
+//            leftViewFront.setVisibility(View.VISIBLE);
+//            leftViewBack.setVisibility(View.VISIBLE);
             onBindLeftViewHolder(leftViewFront, currentLeftPosition);
             onBindLeftViewHolder(leftViewBack, currentLeftPosition + 1);
         }
@@ -156,6 +154,20 @@ public abstract class RotationistsAdapter<VHR extends RotationistsAdapter.ViewHo
         setRightAccordingToCurrentPosition();
     }
 
+    private void setPivotToView(View view) {
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                float pivot_x = view.getWidth() / 2 + view.getX();
+                float pivot_y = (5f / 6) * view.getHeight() + view.getY();
+
+                view.setPivotX(pivot_x);
+                view.setPivotY(pivot_y);
+            }
+        });
+    }
 
     /**
      * @return number of items in data array for right column
@@ -178,9 +190,11 @@ public abstract class RotationistsAdapter<VHR extends RotationistsAdapter.ViewHo
     public abstract void onBindLeftViewHolder(VHL leftViewHolder, int position);
 
 
-    public static abstract class ViewHolder extends View {
-        public ViewHolder(View rootView, Context context) {
-            super(context);
-        }
+    public static abstract class ViewHolder {
+        public abstract void showView();
+
+        public abstract void hideView();
+
+        public abstract View getRootView();
     }
 }
