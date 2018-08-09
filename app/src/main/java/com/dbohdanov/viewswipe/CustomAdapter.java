@@ -1,5 +1,6 @@
 package com.dbohdanov.viewswipe;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,11 +49,21 @@ public class CustomAdapter extends RotationistsAdapter<CustomAdapter.RightViewHo
     @Override
     public void onBindRightViewHolder(RightViewHolder rightViewHolder, int position) {
         rightViewHolder.textView.setText(rigthDataArray.get(position).getText());
+        if (position % 2 == 0) {
+            rightViewHolder.rootView.setBackgroundColor(Color.LTGRAY);
+        } else {
+            rightViewHolder.rootView.setBackgroundColor(Color.WHITE);
+        }
     }
 
     @Override
     public void onBindLeftViewHolder(LeftViewHolder leftViewHolder, int position) {
         leftViewHolder.textView.setText(leftDataArray.get(position).getText());
+        if (position % 2 == 0) {
+            leftViewHolder.rootView.setBackgroundColor(Color.LTGRAY);
+        } else {
+            leftViewHolder.rootView.setBackgroundColor(Color.WHITE);
+        }
     }
 
 
