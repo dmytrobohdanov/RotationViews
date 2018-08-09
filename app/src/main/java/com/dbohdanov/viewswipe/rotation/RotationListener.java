@@ -1,5 +1,6 @@
 package com.dbohdanov.viewswipe.rotation;
 
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -17,7 +18,7 @@ public class RotationListener implements View.OnTouchListener {
     public static final int POSITION_RIGHT = 1;
 
     private final OnMaxAngleReachedListener onMaxAngleReachedListener;
-
+    private Float yTouchConstant = null;
 
     private float angle_start = 0;
 
@@ -35,11 +36,12 @@ public class RotationListener implements View.OnTouchListener {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         float ax = v.getWidth() + v.getX();
-        float ay = event.getRawY();
+        float ay = yTouchConstant == null ? event.getRawY() : yTouchConstant;
         float bx = v.getX() + v.getWidth();
         float by = v.getY() + v.getHeight();
         float cx = event.getRawX();
-        float cy = event.getRawY();
+        float cy = yTouchConstant == null ? event.getRawY() : yTouchConstant;
+
 
         double ab = Math.sqrt(sqr(ax - bx) + sqr(ay - by));
         double bc = Math.sqrt(sqr(bx - cx) + sqr(by - cy));
@@ -49,6 +51,7 @@ public class RotationListener implements View.OnTouchListener {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 angle_start = angle;
+                yTouchConstant = event.getRawY();
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -89,6 +92,7 @@ public class RotationListener implements View.OnTouchListener {
                         v.animate().rotation(ANGLE_ZERO).setDuration(BACK_ANIMATION_DURATION);
                     }
                 }
+                yTouchConstant = null;
                 break;
 
             default:
