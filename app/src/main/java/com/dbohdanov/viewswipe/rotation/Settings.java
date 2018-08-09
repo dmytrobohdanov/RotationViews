@@ -12,6 +12,6 @@ public class Settings {
     public static final long BACK_ANIMATION_DURATION = 500;
 
     //coefficient to speed up movement of view during rotation
-    public static final float VILOCITY = 1.5f;
+    public static final float VILOCITY = 1f;
 
 }
