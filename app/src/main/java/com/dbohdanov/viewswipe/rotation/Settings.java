@@ -9,7 +9,7 @@ public class Settings {
     public static final float ANGLE_ZERO = 0;
 
     //time to move back view
-    public static final long BACK_ANIMATION_DURATION = 500;
+    public static final long BACK_ANIMATION_DURATION = 200;
 
     //coefficient to speed up movement of view during rotation
     public static final float VILOCITY = 1.2f;

@@ -4,6 +4,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import static com.dbohdanov.viewswipe.rotation.Settings.ANGLE_ZERO;
+import static com.dbohdanov.viewswipe.rotation.Settings.BACK_ANIMATION_DURATION;
+
 /**
  * handles rotation listening
  */
@@ -111,7 +114,6 @@ public class RotationListener implements View.OnTouchListener {
         y_cord = (int) event.getRawY();
 
         int viewCenter = v.getWidth() / 2 + (int) x0;
-        int viewWidth = v.getWidth();
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -121,80 +123,36 @@ public class RotationListener implements View.OnTouchListener {
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                x_cord = (int) event.getRawX();
-                y_cord = (int) event.getRawY();
-//                Log.d(TAG, "x " + x
-//                        + " y " + y
-//                        + " xcord " + x_cord
-//                        + " ycord " + y_cord);
-//
-//                Log.d(TAG, "new x" + (x_cord - x));
                 v.setX(x_cord - x);
                 v.setY(y_cord - y);
 
+                v.setRotation((float) ((x_cord - viewCenter) * (Math.PI / 32)));
 
-                if (x_cord >= viewCenter) {
-//                    v.setRotation((float) ((x_cord - viewCenter - (position == POSITION_LEFT ? 0 : (event.getRawX() - event.getX()))) * (Math.PI / 32)));
-                    v.setRotation((float) ((x_cord - viewCenter) * (Math.PI / 32)));
-
-                    if (Math.abs(v.getRotation()) >= Settings.ANGLE_TO_DELETE) {
-                        flag = 2;
-                    } else {
-                        flag = 0;
-                    }
-//                    if (x_cord > (viewCenter + (viewCenter / 2))) {
-//                        if (x_cord > (viewWidth - (viewCenter / 4))) {
-//                            flag = 2;
-//                        } else {
-//                            flag = 0;
-//                        }
-//                    } else {
-//                        flag = 0;
-//                    }
+                if (Math.abs(v.getRotation()) >= Settings.ANGLE_TO_DELETE) {
+                    flag = 1;
                 } else {
-                    // rotate image while moving
-                    v.setRotation((float) ((x_cord - viewCenter) * (Math.PI / 32)));
-
-                    if (Math.abs(v.getRotation()) >= Settings.ANGLE_TO_DELETE) {
-                        flag = 2;
-                    } else {
-                        flag = 0;
-                    }
-//                    if (x_cord < (viewCenter / 2)) {
-//                        if (x_cord < viewCenter / 4) {
-//                            flag = 1;
-//                        } else {
-//                            flag = 0;
-//                        }
-//                    } else {
-//                        flag = 0;
-//                    }
+                    flag = 0;
                 }
-
                 break;
+
             case MotionEvent.ACTION_UP:
                 v.setX(0);
                 v.setY(0);
 
-                x_cord = (int) event.getRawX();
-                y_cord = (int) event.getRawY();
-
-//                Log.e("X Point", "" + x_cord + " , Y " + y_cord);
-//                tvUnLike.setAlpha(0);
-//                tvLike.setAlpha(0);
-
                 if (flag == 0) {
-                    v.setX(0);
-                    v.setY(0);
-                    v.setRotation(0);
+                    v.animate().translationX(0)
+                            .translationY(0)
+                            .rotation(ANGLE_ZERO)
+                            .setDuration(BACK_ANIMATION_DURATION);
+
+//                    v.setX(0);
+//                    v.setY(0);
+//                    v.setRotation(0);
                 } else if (flag == 1) {
                     onMaxAngleReachedListener.onMaxAngleReached();
-//                    parentView.removeView(containerView);
-                } else if (flag == 2) {
-                    onMaxAngleReachedListener.onMaxAngleReached();
-                    //                    parentView.removeView(containerView);
                 }
                 break;
+
             default:
                 break;
         }
